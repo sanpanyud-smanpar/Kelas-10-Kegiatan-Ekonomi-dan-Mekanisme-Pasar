@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI Ekonomi Fase E: Kegiatan Ekonomi & Mekanisme Pasar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0284c7', // Sky 600
+                        primaryLight: '#f0f9ff', // Sky 50
+                        primaryDark: '#0369a1', // Sky 700
+                        accent: '#38bdf8', // Sky 400
+                        slateLight: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .transition-all { transition: all 0.3s ease; }
+        .drag-item { cursor: grab; user-select: none; }
+        .drag-item:active { cursor: grabbing; }
+        .drop-zone { min-height: 55px; border: 2px dashed #bae6fd; transition: all 0.2s; }
+        .drop-zone.drag-over { background-color: #e0f2fe; border-color: #0284c7; }
+    </style>
+</head>
+<body class="bg-primaryLight text-slate-800 min-h-screen flex flex-col justify-between selection:bg-primary selection:text-white">
+
+    <header class="bg-white border-b border-sky-100 shadow-sm sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    ECO
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-800 text-base md:text-lg">Kegiatan Ekonomi & Pasar</h1>
+                    <p class="text-xs text-slate-500">Kelas 10 Fase E • SMAN 1 Parongpong</p>
+                </div>
+            </div>
+            <div class="text-right hidden sm:block">
+                <p class="text-xs font-semibold text-primaryDark">Pengembang:</p>
+                <p class="text-xs text-slate-600">Sangaji Panji Yuda, SE.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow flex flex-col justify-center">
+
+        <section id="welcomeScreen" class="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-sky-100 text-center relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-100 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-100 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="w-24 h-24 mx-auto mb-4 bg-primaryLight rounded-full flex items-center justify-center shadow-inner border-2 border-primary">
+                    <svg class="w-16 h-16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="40" fill="#0284c7" />
+                        <circle cx="35" cy="40" r="6" fill="white" />
+                        <circle cx="65" cy="40" r="6" fill="white" />
+                        <circle cx="37" cy="38" r="2.5" fill="#0f172a" />
+                        <circle cx="67" cy="38" r="2.5" fill="#0f172a" />
+                        <path d="M 35 60 Q 50 72 65 60" stroke="white" stroke-width="4" stroke-linecap="round" fill="none" />
+                        <path d="M 20 30 L 50 15 L 80 30 L 50 45 Z" fill="#0369a1" />
+                        <rect x="47" y="10" width="6" height="5" fill="#38bdf8" />
+                        <line x1="70" y1="26" x2="75" y2="45" stroke="#facc15" stroke-width="3" />
+                    </svg>
+                </div>
+
+                <span class="bg-primaryLight text-primaryDark text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Media Pembelajaran Interaktif Deep Learning</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-3 mb-2">Tahap 1: Hakikat Ilmu Ekonomi & Pilihan Manusia</h2>
+                <p class="text-slate-600 text-sm md:text-base max-w-2xl mx-auto mb-6">
+                    Selamat datang di modul pembelajaran interaktif! Mengapa kita selalu dihadapkan pada pilihan hidup yang serba terbatas? Mari kita telusuri bagaimana kelangkaan dan pilihan konsumen-produsen membentuk sistem ekonomi kita.
+                </p>
+
+                <!-- Stage 1 Exploratory Interaction Box -->
+                <div class="bg-slateLight p-5 rounded-2xl max-w-xl mx-auto mb-8 text-left border border-slate-200 shadow-sm space-y-3">
+                    <p class="text-xs font-bold text-primary uppercase tracking-wider">Eksplorasi Kritis Awal</p>
+                    <p class="text-xs md:text-sm text-slate-700 font-medium">
+                        Keluarga Anda memiliki anggaran bulanan terbatas Rp4.000.000. Saat yang sama, Anda butuh laptop baru untuk sekolah dan orang tua butuh biaya pengobatan mendesak. Keputusan rasional apa yang pertama kali harus diambil?
+                    </p>
+                    <div id="introExplorationContainer" class="space-y-2 pt-2">
+                        <button onclick="handleIntroChoice(0)" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-sky-50 text-xs md:text-sm text-slate-700 transition-all font-medium">
+                            A. Membeli laptop baru agar prestasi sekolah meningkat tanpa peduli kesehatan.
+                        </button>
+                        <button onclick="handleIntroChoice(1)" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-sky-50 text-xs md:text-sm text-slate-700 transition-all font-medium">
+                            B. Mendahulukan pengobatan orang tua karena sifatnya darurat & primer, lalu merencanakan ulang anggaran laptop.
+                        </button>
+                    </div>
+                    <div id="introFeedback" class="hidden p-3 rounded-xl text-xs md:text-sm mt-2"></div>
+                </div>
+
+                <button id="startQuizMainBtn" onclick="startQuiz()" class="hidden bg-primary hover:bg-primaryDark text-white font-semibold px-8 py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 items-center justify-center mx-auto gap-2 text-base">
+                    <span>Lanjut ke Tahap Pendalaman & Kuis (10 Soal HOTS)</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="quizScreen" class="hidden bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-sky-100 flex flex-col justify-between">
+            <div class="flex flex-col sm:flex-row justify-between items-center pb-6 border-b border-slate-100 gap-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <!-- Dynamic Mascot SVG -->
+                    <div id="mascotContainer" class="w-12 h-12 rounded-full bg-primaryLight border border-primary flex items-center justify-center shrink-0 shadow-sm transition-all duration-300">
+                        <svg id="mascotSvg" class="w-8 h-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="40" fill="#0284c7" />
+                            <circle cx="35" cy="40" r="6" fill="white" />
+                            <circle cx="65" cy="40" r="6" fill="white" />
+                            <circle cx="37" cy="38" r="2.5" fill="#0f172a" />
+                            <circle cx="67" cy="38" r="2.5" fill="#0f172a" />
+                            <path id="mascotMouth" d="M 35 60 Q 50 72 65 60" stroke="white" stroke-width="4" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span id="questionCategory" class="text-xs font-bold text-primary uppercase tracking-wider">Tahap Pendalaman & Evaluasi</span>
+                        <h3 class="text-sm font-semibold text-slate-700">Soal <span id="currentQuestionNum">1</span> dari <span id="totalQuestionsNum">10</span></h3>
+                    </div>
+                </div>
+                
+                <div class="w-full sm:w-48 bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                    <div id="progressBar" class="bg-primary h-full w-0 transition-all duration-500 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Question & Interaction Container -->
+            <div class="py-6 space-y-6">
+                <div class="space-y-3">
+                    <div id="questionContext" class="bg-sky-50 border-l-4 border-primary p-4 rounded-r-xl text-xs md:text-sm text-slate-700 leading-relaxed italic">
+                        <!-- Context text inserted here -->
+                    </div>
+                    <h2 id="questionTitle" class="text-base md:text-lg font-bold text-slate-900 leading-snug">
+                        <!-- Question text inserted here -->
+                    </h2>
+                </div>
+
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- Dynamic Options Inserted Here -->
+                </div>
+
+                <div id="feedbackBox" class="hidden rounded-2xl p-4 border transition-all animate-fadeIn">
+                    <div class="flex items-start gap-3">
+                        <div id="feedbackIcon" class="w-7 h-7 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5"></div>
+                        <div class="space-y-1">
+                            <h4 id="feedbackTitle" class="font-bold text-sm"></h4>
+                            <p id="feedbackText" class="text-xs md:text-sm leading-relaxed text-slate-600"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                <div class="text-xs text-slate-500 font-medium">
+                    Skor Sementara: <span id="currentScore" class="font-bold text-primary text-base">0</span> Poin
+                </div>
+                <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2.5 rounded-xl shadow transition-all text-sm flex items-center gap-2">
+                    <span>Lanjut</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="resultScreen" class="hidden bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-sky-100 text-center space-y-6">
+            <div class="w-20 h-20 mx-auto bg-primaryLight rounded-full flex items-center justify-center text-primary border-2 border-primary shadow-inner">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+
+            <div class="space-y-2">
+                <span class="bg-primaryLight text-primaryDark text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Tahap 3: Studi Kasus Refleksi & Hasil Akhir</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Evaluasi Capaian Pembelajaran</h2>
+                <p id="resultMessage" class="text-slate-600 text-sm max-w-lg mx-auto">
+                    Hebat! Kamu telah menuntaskan seluruh alur pembelajaran hakikat ilmu ekonomi, perilaku pelaku ekonomi, dan mekanisme pasar.
+                </p>
+            </div>
+
+            <!-- Score Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto text-left">
+                <div class="bg-slateLight p-4 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <p class="text-xs text-slate-500 font-medium">Total Skor</p>
+                    <p id="finalScore" class="text-2xl font-bold text-primary mt-1">0</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Dari 100 Maksimal</p>
+                </div>
+                <div class="bg-slateLight p-4 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <p class="text-xs text-slate-500 font-medium">Jawaban Benar</p>
+                    <p id="finalCorrect" class="text-2xl font-bold text-emerald-600 mt-1">0 / 10</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Ketepatan Konseptual</p>
+                </div>
+                <div class="bg-slateLight p-4 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <p class="text-xs text-slate-500 font-medium">Predikat Mastery</p>
+                    <p id="finalPredicate" class="text-lg font-bold text-slate-800 mt-1">Mahir</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Deep Learning Competent</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 pt-2">
+                <button onclick="restartQuiz()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-6 py-2.5 rounded-xl transition-all text-sm">
+                    Ulangi Pembelajaran
+                </button>
+                <button onclick="shareResult()" class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2.5 rounded-xl shadow transition-all text-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                    <span>Salin Ringkasan Hasil</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-sky-100 py-3 text-center text-xs text-slate-500 mt-8">
+        <p>Media Pembelajaran Digital Ekonomi Fase E • Dikembangkan oleh <strong class="text-slate-700">Sangaji Panji Yuda, SE.</strong> (SMAN 1 Parongpong)</p>
+    </footer>
+
+    <!-- Custom Message Box Modal (No alert/confirm used) -->
+    <div id="customModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-sky-100 text-center space-y-4 animate-fadeIn">
+            <div id="modalIconContainer" class="w-12 h-12 mx-auto rounded-full flex items-center justify-center"></div>
+            <h3 id="modalTitle" class="font-bold text-slate-800 text-lg">Pemberitahuan</h3>
+            <p id="modalMessage" class="text-xs md:text-sm text-slate-600 leading-relaxed"></p>
+            <button onclick="closeModal()" class="w-full bg-primary hover:bg-primaryDark text-white font-semibold py-2.5 rounded-xl transition-all text-sm">
+                Mengerti / Lanjutkan
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(160, now + 0.15);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            } else if (type === 'complete') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.frequency.setValueAtTime(freq, now + idx * 0.1);
+                    g.gain.setValueAtTime(0.15, now + idx * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.4);
+                    o.start(now + idx * 0.1);
+                    o.stop(now + idx * 0.1 + 0.4);
+                });
+            }
+        }
+
+        // Introduction Stage 1 Interaction
+        function handleIntroChoice(choiceIdx) {
+            const feedbackDiv = document.getElementById('introFeedback');
+            feedbackDiv.classList.remove('hidden');
+            if (choiceIdx === 1) {
+                playSound('correct');
+                feedbackDiv.className = "p-3 rounded-xl text-xs md:text-sm mt-2 bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium";
+                feedbackDiv.innerHTML = "<strong>Benar!</strong> Skala prioritas mengutamakan kebutuhan yang mendesak & darurat (kesehatan) di atas keinginan sekunder. Hal ini mencerminkan rasionalitas dalam ilmu ekonomi.";
+                document.getElementById('startQuizMainBtn').classList.remove('hidden');
+                document.getElementById('startQuizMainBtn').classList.add('flex');
+            } else {
+                playSound('wrong');
+                feedbackDiv.className = "p-3 rounded-xl text-xs md:text-sm mt-2 bg-rose-50 text-rose-800 border border-rose-200 font-medium";
+                feedbackDiv.innerHTML = "<strong>Kurang Tepat.</strong> Mengabaikan kebutuhan darurat kesehatan demi barang sekunder melanggar prinsip rasionalitas dan skala prioritas ekonomi.";
+            }
+        }
+
+        const quizData = [
+            {
+                type: "mc",
+                category: "Hakikat Ilmu Ekonomi",
+                context: "Studi Kasus Agraria: Di dataran tinggi Parongpong, alih fungsi lahan pertanian subur menjadi vila peristirahatan meningkat, sementara permintaan sayuran kota melonjak tinggi.",
+                question: "Mengapa ilmu ekonomi menyatakan bahwa kelangkaan (scarcity) selalu ada meskipun suatu wilayah memiliki kekayaan alam yang melimpah?",
+                options: [
+                    "Karena pemerintah gagal mendistribusikan kekayaan alam secara merata kepada seluruh warga.",
+                    "Karena kebutuhan manusia sifatnya tidak terbatas, sedangkan sumber daya alam dan alat pemuas memiliki keterbatasan.",
+                    "Karena harga barang di pasar bebas selalu mengalami inflasi dari waktu ke waktu.",
+                    "Karena produsen sengaja membatasi pasokan untuk memperoleh keuntungan maksimum."
+                ],
+                answer: 1,
+                explanation: "Inti ilmu ekonomi adalah mengatasi ketimpangan antara kebutuhan manusia yang tak terbatas dan alat pemuas kebutuhan yang terbatas (kelangkaan)."
+            },
+            {
+                type: "complex",
+                category: "Biaya Peluang (Opportunity Cost)",
+                context: "Kasus Karier Remaja: Setelah lulus SMA, Rian dihadapkan pada dua pilihan: bekerja di pabrik garmen dengan gaji Rp2.500.000/bulan atau kuliah dengan estimasi biaya hidup Rp1.500.000/bulan namun berprospek karier tinggi.",
+                question: "Manakah pernyataan yang BENAR mengenai Biaya Peluang (Opportunity Cost) bagi Rian? (Pilih dua jawaban benar)",
+                options: [
+                    "Jika Rian memilih kuliah, biaya peluangnya adalah gaji Rp2.500.000 dari pekerjaan pabrik yang dikorbankan.",
+                    "Biaya peluang dalam kasus ini adalah total seluruh biaya yang dikeluarkan selama masa kuliah.",
+                    "Jika Rian memilih bekerja, biaya peluangnya adalah kesempatan memperoleh ilmu dan prospek karier masa depan.",
+                    "Biaya peluang tidak berhubungan dengan pilihan alternatif yang dikorbankan."
+                ],
+                answer: [0, 2],
+                explanation: "Biaya peluang adalah nilai alternatif terbaik yang dikorbankan. Jika kuliah, gaji yang hilang adalah biaya peluangnya; sebaliknya jika bekerja, prospek ilmu yang dikorbankan."
+            },
+            {
+                type: "drag",
+                category: "Pelaku Ekonomi & Perilaku Konsumen-Produsen",
+                context: "Siklus Perekonomian: Konsumen dan produsen berinteraksi secara dinamis untuk mengoptimalkan utilitas dan keuntungan di pasar.",
+                question: "Pasangkan peran pelaku ekonomi berikut dengan aktivitas rasional yang paling tepat:",
+                items: [
+                    { id: "item1", text: "Konsumen (Rumah Tangga)" },
+                    { id: "item2", text: "Produsen (Perusahaan)" }
+                ],
+                zones: [
+                    { id: "zone1", label: "Memaksimalkan kepuasan (utility) dengan anggaran terbatas", correctItem: "item1" },
+                    { id: "zone2", label: "Meminimalkan biaya produksi untuk meraih laba maksimum", correctItem: "item2" }
+                ],
+                explanation: "Konsumen bertujuan memaksimalkan utilitas, sedangkan produsen bertujuan memaksimalkan laba melalui efisiensi biaya."
+            },
+            {
+                type: "tf",
+                category: "Kelangkaan & Skala Prioritas",
+                context: "Pengeluaran Keluarga: Keluarga Pak Budi memiliki anggaran bulanan tetap untuk membayar cicilan rumah, membeli obat orang tua, dan rekreasi.",
+                question: "Benar atau Salah: Penyusunan skala prioritas mutlak diperlukan karena adanya kelangkaan anggaran, sehingga kebutuhan primer/mendesak harus didahulukan dari kebutuhan tersier.",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Pernyataan BENAR. Skala prioritas menyusun urutan kebutuhan dari yang paling penting dan mendesak demi efisiensi sumber daya."
+            },
+            {
+                type: "mc",
+                category: "Mekanisme Pasar (Permintaan & Penawaran)",
+                context: "Fenomena Pasar: Menjelang hari raya, harga daging ayam dan cabai melonjak tajam di pasar akibat lonjakan pembeli tanpa peningkatan pasokan seketika.",
+                question: "Bagaimana hukum permintaan dan penawaran menjelaskan fenomena kenaikan harga tersebut?",
+                options: [
+                    "Permintaan yang meningkat drastis dengan penawaran tetap mengakibatkan kelangkaan sementara, mendorong harga naik ke titik ekuilibrium baru.",
+                    "Produsen secara sepihak menaikkan harga untuk merugikan konsumen.",
+                    "Pemerintah menetapkan harga eceran tertinggi yang memaksa pedagang menaikkan harga.",
+                    "Hukum permintaan tidak berlaku saat hari raya keagamaan."
+                ],
+                answer: 0,
+                explanation: "Kelebihan permintaan (excess demand) di atas penawaran pada harga awal akan menaikkan harga hingga tercapai titik keseimbangan baru."
+            },
+            {
+                type: "complex",
+                category: "Masalah Pokok Ekonomi Modern",
+                context: "Kasus UMKM Konfeksi: Sebuah pabrik garmen menghadapi dilema produksi pakaian remaja (What), teknik tenun dan mesin otomatis yang efisien (How), dan target pasar (For Whom).",
+                question: "Manakah yang termasuk inti pertanyaan pokok ekonomi modern 'HOW' (Bagaimana cara memproduksi)? (Pilih dua jawaban benar)",
+                options: [
+                    "Menentukan apakah pabrik harus membuat jaket musim dingin atau kaos tipis.",
+                    "Memilih kombinasi penggunaan mesin otomatis berteknologi tinggi versus tenaga kerja manual.",
+                    "Menentukan saluran distribusi logistik yang paling hemat biaya.",
+                    "Memutuskan efisiensi alokasi bahan baku agar tidak terjadi limbah produksi berlebihan."
+                ],
+                answer: [1, 3],
+                explanation: "Pertanyaan 'HOW' berkaitan dengan metode, teknologi, dan kombinasi efisiensi sumber daya dalam proses produksi."
+            },
+            {
+                type: "drag",
+                category: "Jenis-Jenis Kebutuhan Manusia",
+                context: "Klasifikasi Kebutuhan: Kebutuhan manusia diklasifikasikan berdasarkan intensitas, waktu, sifat, dan subjeknya.",
+                question: "Seret dan letakkan jenis kebutuhan berikut ke dalam kategori klasifikasi yang tepat:",
+                items: [
+                    { id: "i1", text: "Obat saat sakit keras" },
+                    { id: "i2", text: "Tabungan hari tua / asuransi" }
+                ],
+                zones: [
+                    { id: "z1", label: "Kebutuhan Berdasarkan Waktu (Mendesak/Darurat)", correctItem: "i1" },
+                    { id: "z2", label: "Kebutuhan Masa Depan (Persiapan)", correctItem: "i2" }
+                ],
+                explanation: "Obat saat sakit keras adalah kebutuhan mendesak saat itu juga, sedangkan tabungan dipersiapkan untuk masa depan."
+            },
+            {
+                type: "tf",
+                category: "Pelaku Ekonomi (Peran Pemerintah)",
+                context: "Peran Pemerintah: Pemerintah berperan sebagai pengatur regulasi sekaligus pelaku ekonomi (produsen dan konsumen).",
+                question: "Benar atau Salah: Ketika pemerintah membangun jalan tol lewat BUMN dan membeli alat kantor kementerian, pemerintah bertindak sebagai RTP dan RTK.",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Pernyataan BENAR. Pemerintah bertindak sebagai produsen (mengelola proyek/BUMN) dan konsumen (membeli barang operasional pasar)."
+            },
+            {
+                type: "mc",
+                category: "Biaya Eksplisit & Implisit",
+                context: "Ilustrasi Wirausaha: Ibu Siska berhenti bekerja dengan gaji Rp4.000.000/bulan untuk membuka kedai kopi menggunakan ruko miliknya yang bernilai sewa Rp1.500.000/bulan.",
+                question: "Berapakah besarnya biaya implisit (implicit cost) per bulan yang dikorbankan oleh Ibu Siska?",
+                options: [
+                    "Rp4.000.000 saja",
+                    "Rp1.500.000 saja",
+                    "Rp5.500.000 (gabungan gaji yang hilang dan potensi sewa ruko sendiri)",
+                    "Rp0 karena ruko milik sendiri."
+                ],
+                answer: 2,
+                explanation: "Biaya implisit adalah biaya kesempatan atas penggunaan sumber daya milik sendiri (gaji yang hilang Rp4.000.000 + potensi sewa ruko Rp1.500.000 = Rp5.500.000)."
+            },
+            {
+                type: "tf",
+                category: "Sistem Harga & Pasar Bebas",
+                context: "Sistem Pasar Bebas: Harga pasar terbentuk otomatis melalui interaksi permintaan dan penawaran tanpa intervensi.",
+                question: "Benar atau Salah: Salah satu keunggulan utama mekanisme pasar bebas adalah terciptanya alokasi sumber daya yang efisien karena harga berfungsi sebagai sinyal utama.",
+                options: ["Benar", "Salah"],
+                answer: 0, // Benar
+                explanation: "Pernyataan BENAR. Harga berfungsi sebagai mekanisme sinyal yang menuntun produsen dan konsumen mengalokasikan sumber daya secara efisien."
+            }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let correctCount = 0;
+        let userAnswersState = {};
+
+        function startQuiz() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            currentIdx = 0;
+            score = 0;
+            correctCount = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentIdx];
+            document.getElementById('currentQuestionNum').innerText = currentIdx + 1;
+            document.getElementById('totalQuestionsNum').innerText = quizData.length;
+            document.getElementById('questionCategory').innerText = q.category;
+            document.getElementById('questionContext').innerText = q.context;
+            document.getElementById('questionTitle').innerText = q.question;
+
+            const progress = ((currentIdx) / quizData.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('currentScore').innerText = score;
+
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            if (q.type === 'mc' || q.type === 'tf') {
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-3.5 rounded-2xl border border-slate-200 bg-slateLight hover:bg-sky-50 hover:border-primary text-slate-700 text-xs md:text-sm font-medium transition-all shadow-sm flex items-center justify-between group";
+                    btn.innerHTML = `<span>${opt}</span><span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs group-hover:border-primary group-hover:text-primary font-bold">${String.fromCharCode(65 + idx)}</span>`;
+                    btn.onclick = () => checkAnswerMC(idx);
+                    container.appendChild(btn);
+                });
+            } else if (q.type === 'complex') {
+                userAnswersState.complexSelected = [];
+                q.options.forEach((opt, idx) => {
+                    const div = document.createElement('div');
+                    div.className = "p-3.5 rounded-2xl border border-slate-200 bg-slateLight hover:bg-sky-50 cursor-pointer text-slate-700 text-xs md:text-sm font-medium transition-all flex items-center gap-3";
+                    div.innerHTML = `<input type="checkbox" id="chk_${idx}" class="w-4 h-4 text-primary rounded border-slate-300 focus:ring-primary" onclick="toggleComplex(${idx})"> <label for="chk_${idx}" class="cursor-pointer flex-grow">${opt}</label>`;
+                    div.onclick = (e) => {
+                        if(e.target.tagName !== 'INPUT') {
+                            const chk = document.getElementById(`chk_${idx}`);
+                            chk.checked = !chk.checked;
+                            toggleComplex(idx);
+                        }
+                    };
+                    container.appendChild(div);
+                });
+
+                const submitBtn = document.createElement('button');
+                submitBtn.className = "mt-4 w-full bg-primary hover:bg-primaryDark text-white font-semibold py-3 rounded-xl shadow transition-all text-sm";
+                submitBtn.innerText = "Periksa Jawaban Kompleks";
+                submitBtn.onclick = checkAnswerComplex;
+                container.appendChild(submitBtn);
+            } else if (q.type === 'drag') {
+                renderDragDropInterface(q);
+            }
+        }
+
+        function toggleComplex(idx) {
+            let sel = userAnswersState.complexSelected || [];
+            if (sel.includes(idx)) {
+                sel = sel.filter(i => i !== idx);
+            } else {
+                sel.push(idx);
+            }
+            userAnswersState.complexSelected = sel;
+        }
+
+        function checkAnswerMC(selectedIdx) {
+            const q = quizData[currentIdx];
+            const isCorrect = (selectedIdx === q.answer);
+            
+            if (isCorrect) {
+                score += 10;
+                correctCount++;
+                playSound('correct');
+                updateMascot('happy');
+                showFeedback(true, "Luar Biasa! Jawaban Anda Benar.", q.explanation);
+            } else {
+                playSound('wrong');
+                updateMascot('sad');
+                showFeedback(false, "Kurang Tepat.", q.explanation);
+            }
+
+            disableAllOptions();
+        }
+
+        function checkAnswerComplex() {
+            const q = quizData[currentIdx];
+            const sel = (userAnswersState.complexSelected || []).sort();
+            const correctArr = [...q.answer].sort();
+
+            const isCorrect = JSON.stringify(sel) === JSON.stringify(correctArr);
+
+            if (isCorrect) {
+                score += 10;
+                correctCount++;
+                playSound('correct');
+                updateMascot('happy');
+                showFeedback(true, "Analisis Tepat! Pilihan Kompleks Sesuai.", q.explanation);
+            } else {
+                playSound('wrong');
+                updateMascot('sad');
+                showFeedback(false, "Analisis Kurang Tepat.", q.explanation);
+            }
+
+            disableAllOptions();
+        }
+
+        function renderDragDropInterface(q) {
+            userAnswersState.matches = {};
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = "space-y-4";
+
+            const itemsPool = document.createElement('div');
+            itemsPool.className = "flex flex-wrap gap-2 p-3 bg-sky-50 rounded-2xl border border-sky-100";
+            itemsPool.innerHTML = `<p class="w-full text-xs font-semibold text-slate-700">Seret/Pilih item berikut ke kotak pasangannya:</p>`;
+            
+            q.items.forEach(item => {
+                const badge = document.createElement('div');
+                badge.id = item.id;
+                badge.className = "drag-item bg-white px-3 py-2 rounded-xl border border-primary text-xs font-semibold text-primaryDark shadow-sm";
+                badge.innerText = item.text;
+                badge.draggable = true;
+                badge.ondragstart = (e) => e.dataTransfer.setData('text/plain', item.id);
+                itemsPool.appendChild(badge);
+            });
+            wrapper.appendChild(itemsPool);
+
+            const zonesContainer = document.createElement('div');
+            zonesContainer.className = "space-y-3";
+            q.zones.forEach(zone => {
+                const zDiv = document.createElement('div');
+                zDiv.className = "drop-zone p-4 rounded-2xl bg-white flex flex-col sm:flex-row justify-between items-center gap-3";
+                zDiv.innerHTML = `<span class="text-xs md:text-sm font-medium text-slate-700">${zone.label}</span><div data-zone="${zone.id}" class="w-full sm:w-1/2 min-h-[45px] rounded-xl bg-slateLight border border-slate-200 flex items-center justify-center p-2 text-xs text-slate-400 font-medium">Letakkan di sini</div>`;
+                
+                const dropBox = zDiv.querySelector('div[data-zone]');
+                dropBox.ondragover = (e) => { e.preventDefault(); dropBox.classList.add('drag-over'); };
+                dropBox.ondragleave = () => dropBox.classList.remove('drag-over');
+                dropBox.ondrop = (e) => {
+                    e.preventDefault();
+                    dropBox.classList.remove('drag-over');
+                    const itemId = e.dataTransfer.getData('text/plain');
+                    const itemEl = document.getElementById(itemId);
+                    dropBox.innerHTML = '';
+                    dropBox.appendChild(itemEl);
+                    userAnswersState.matches[zone.id] = itemId;
+                };
+                zonesContainer.appendChild(zDiv);
+            });
+            wrapper.appendChild(zonesContainer);
+
+            const submitBtn = document.createElement('button');
+            submitBtn.className = "mt-4 w-full bg-primary hover:bg-primaryDark text-white font-semibold py-3 rounded-xl shadow transition-all text-sm";
+            submitBtn.innerText = "Periksa Penjodohan";
+            submitBtn.onclick = () => {
+                let allCorrect = true;
+                q.zones.forEach(zone => {
+                    if (userAnswersState.matches[zone.id] !== zone.correctItem) {
+                        allCorrect = false;
+                    }
+                });
+
+                if (allCorrect) {
+                    score += 10;
+                    correctCount++;
+                    playSound('correct');
+                    updateMascot('happy');
+                    showFeedback(true, "Penjodohan Tepat dan Sempurna!", q.explanation);
+                } else {
+                    playSound('wrong');
+                    updateMascot('sad');
+                    showFeedback(false, "Ada Penjodohan yang Belum Tepat.", q.explanation);
+                }
+                disableAllOptions();
+            };
+            wrapper.appendChild(submitBtn);
+
+            document.getElementById('optionsContainer').appendChild(wrapper);
+        }
+
+        function showFeedback(isCorrect, title, text) {
+            const box = document.getElementById('feedbackBox');
+            const icon = document.getElementById('feedbackIcon');
+            const titleEl = document.getElementById('feedbackTitle');
+            const textEl = document.getElementById('feedbackText');
+
+            box.classList.remove('hidden');
+            if (isCorrect) {
+                box.className = "rounded-2xl p-4 border bg-emerald-50 border-emerald-200 transition-all animate-fadeIn";
+                icon.className = "w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5 font-bold";
+                icon.innerHTML = "✓";
+                titleEl.className = "font-bold text-sm text-emerald-800";
+                titleEl.innerText = title;
+                textEl.className = "text-xs md:text-sm leading-relaxed text-emerald-700";
+                textEl.innerText = text;
+            } else {
+                box.className = "rounded-2xl p-4 border bg-rose-50 border-rose-200 transition-all animate-fadeIn";
+                icon.className = "w-7 h-7 rounded-full bg-rose-500 flex items-center justify-center text-white shrink-0 mt-0.5 font-bold";
+                icon.innerHTML = "✕";
+                titleEl.className = "font-bold text-sm text-rose-800";
+                titleEl.innerText = title;
+                textEl.className = "text-xs md:text-sm leading-relaxed text-rose-700";
+                textEl.innerText = text;
+            }
+
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('currentScore').innerText = score;
+        }
+
+        function disableAllOptions() {
+            const container = document.getElementById('optionsContainer');
+            const buttons = container.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+        }
+
+        function updateMascot(mood) {
+            const mouth = document.getElementById('mascotMouth');
+            const container = document.getElementById('mascotContainer');
+            if (mood === 'happy') {
+                mouth.setAttribute('d', 'M 35 55 Q 50 75 65 55');
+                container.classList.add('scale-110', 'bg-emerald-100', 'border-emerald-500');
+                setTimeout(() => container.classList.remove('scale-110', 'bg-emerald-100', 'border-emerald-500'), 500);
+            } else {
+                mouth.setAttribute('d', 'M 35 70 Q 50 50 65 70');
+                container.classList.add('scale-110', 'bg-rose-100', 'border-rose-500');
+                setTimeout(() => container.classList.remove('scale-110', 'bg-rose-100', 'border-rose-500'), 500);
+            }
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('finalCorrect').innerText = `${correctCount} / 10`;
+
+            let predicate = "Perlu Penguatan Konsep";
+            let msg = "Terus semangat belajar! Pelajari kembali modul materi kelangkaan, biaya peluang, dan mekanisme pasar.";
+
+            if (score >= 80) {
+                predicate = "Sangat Mahir (Master)";
+                msg = "Luar biasa! Anda menguasai seluruh indikator dasar ilmu ekonomi, perilaku konsumen-produsen, dan mekanisme pasar secara mendalam.";
+                playSound('complete');
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            } else if (score >= 60) {
+                predicate = "Mahir (Proficient)";
+                msg = "Kerja bagus! Pemahaman konsep dasar ekonomi Anda sudah baik, pertahankan dan tingkatkan ketelitian analisis kasus.";
+                playSound('complete');
+                confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+            }
+            document.getElementById('finalPredicate').innerText = predicate;
+            document.getElementById('resultMessage').innerText = msg;
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+
+        function shareResult() {
+            const text = `Ringkasan Kinerja Media Pembelajaran Ekonomi (SMAN 1 Parongpong):\nPengembang: Sangaji Panji Yuda, SE.\nSkor Total: ${score}/100\nJawaban Benar: ${correctCount}/10\nPredikat: ${document.getElementById('finalPredicate').innerText}`;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showModal("Berhasil Disalin!", "Ringkasan hasil evaluasi berhasil disalin ke papan klip (clipboard).");
+        }
+
+        function showModal(title, msg) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = msg;
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
